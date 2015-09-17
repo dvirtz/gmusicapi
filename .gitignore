@@ -21,3 +21,4 @@ bin
 lib
 include
 share
+project/_build
