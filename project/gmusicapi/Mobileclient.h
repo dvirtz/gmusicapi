@@ -1,11 +1,13 @@
 #pragma once
-#include <boost/python.hpp>
+#include "GMusicApiUser.h"
+#include "Song.h"
 #include <string>
+#include <vector>
 
 namespace GMusicApi
 {
 
-class Mobileclient
+class Mobileclient : private GMusicApiUser
 {
 public:
 	Mobileclient(bool debug_logging = true, bool validate = true, bool verify_ssl = true);
@@ -15,8 +17,10 @@ public:
 			   const std::string& password, 
 			   const std::string& android_id = std::string()) const;
 
-private:
-	boost::python::object m_object;
+	bool logout() const;
+
+	SongRange get_all_songs(bool incremental = false, bool include_deleted = false);
+
 };
 
 
