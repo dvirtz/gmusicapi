@@ -1,3 +1,4 @@
+#include "utility.h"
 #include "Catch.hpp"
 #include "Mobileclient.h"
 #include "userCredentials.h"
@@ -10,34 +11,49 @@ TEST_CASE("Mobileclient constructed", "[Mobileclient]")
 	REQUIRE_NOTHROW(Mobileclient m);
 }
 
-TEST_CASE("empty login failes", "[Mobileclient]")
+TEST_CASE("Mobileclient login", "[Mobileclient]")
 {
 	Mobileclient m;
-	REQUIRE_FALSE(m.login("", ""));
-}
 
-TEST_CASE("login succeeds", "[Mobileclient]")
-{
-	Mobileclient m;
-	REQUIRE(m.login(gm_user, gm_pass));
-}
-
-TEST_CASE("logout succeeds", "[Mobilecleint]")
-{
-	Mobileclient m;
-	REQUIRE(m.logout());
-}
-
-TEST_CASE("song list not empty", "[Mobileclient]")
-{
-	Mobileclient m;
-	m.login(gm_user, gm_pass);
-	SECTION("incremental")
+	SECTION("empty login failes")
 	{
-		REQUIRE_FALSE(m.get_all_songs(true).empty());
+		REQUIRE_FALSE(m.login("", ""));
 	}
-	SECTION("non incremental")
+
+	SECTION("login succeeds")
 	{
-		REQUIRE_FALSE(m.get_all_songs().empty());
+		REQUIRE(m.login(gm_user, gm_pass));
+
+		SECTION("song list not empty")
+		{
+			SECTION("incremental")
+			{
+				auto songs = m.get_all_songs(true);
+				REQUIRE_FALSE(songs.empty());
+
+				SECTION("registered devices list not empty")
+				{
+					auto registeredDevices = m.get_registered_devices();
+					REQUIRE_FALSE(registeredDevices.empty());
+
+					SECTION("stream url not empty")
+					{
+						auto song = songs.front();
+						auto registeredDeviceId = registeredDevices.front().m_id;
+						auto streamUrl = m.get_stream_url(song.m_id, registeredDeviceId);
+						REQUIRE_FALSE(streamUrl.empty());
+					}
+				}
+			}
+			SECTION("non incremental")
+			{
+				REQUIRE_FALSE(m.get_all_songs().empty());
+			}
+		}
+	}
+
+	SECTION("logout succeeds")
+	{
+		REQUIRE(m.logout());
 	}
 }

@@ -13,15 +13,21 @@ configure_file("${USER_CRED_H}.in" ${CMAKE_CURRENT_BINARY_DIR}/${USER_CRED_H})
 set(HEADERS ${CMAKE_CURRENT_BINARY_DIR}/${USER_CRED_H})
 set(SOURCES MobileclientTest.cpp TesterMain.cpp WebclientTester.cpp)
 
-include_directories(${CATCH_INCLUDE_DIR} 
-	$<TARGET_PROPERTY:GMusicApi,INTERFACE_INCLUDE_DIRECTORIES>)
+FIND_BOOST_PYTHON()
 
 set_source_files_properties(Catch.hpp PROPERTIES GENERATED ON)
+if(MSVC)
+	set_source_files_properties(TesterMain.cpp PROPERTIES COMPILE_FLAGS /wd4702)
+endif()
 
 add_executable(Tester ${HEADERS} ${SOURCES})
 
-target_link_libraries(Tester ${Boost_LIBRARIES}
-	GMusicApi 
+target_include_directories(Tester PUBLIC ${CATCH_INCLUDE_DIR} 
+	$<TARGET_PROPERTY:GMusicApi,INTERFACE_INCLUDE_DIRECTORIES>)
+
+target_link_libraries(Tester PUBLIC
+	GMusicApi
+	${Boost_LIBRARIES}
 	debug ${PYTHON_LIBRARY_DEBUG} 
 	optimized ${PYTHON_LIBRARY_RELEASE})
 

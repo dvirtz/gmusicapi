@@ -51,7 +51,3 @@ include(doxygen.cmake)
 
 add_subdirectory(gmusicapi)
 add_subdirectory(Tester)
-
-if(MSVC)
-	include_external_msproject(pygmusicapi ${CMAKE_SOURCE_DIR}/../gmusicapi/pygmusicapi.pyproj)
-endif()

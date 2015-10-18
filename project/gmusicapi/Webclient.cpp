@@ -11,7 +11,7 @@ Webclient::~Webclient()
 {
 }
 
-void Webclient::login(const std::string & email, const std::string & password)
+void Webclient::login(const std::string & /*email*/, const std::string & /*password*/)
 {
 
 }

@@ -10,6 +10,7 @@ Thumbs.db
 
 _local_*.py
 *.pyc
+*.pyproj
 
 docs/build
 dist
@@ -19,6 +20,6 @@ gmusicapi.log
 
 bin
 lib
-include
 share
 project/_build
+project/DictStructGenerator

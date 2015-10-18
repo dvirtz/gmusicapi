@@ -1,6 +1,6 @@
 #include "GMusicApi.h"
-#include "Song.h"
-#include "utility.h"
+#include "typeConverters.h"
+#include "RegisteredDevice.h"
 #include <iostream>
 
 namespace GMusicApi
@@ -34,6 +34,12 @@ void GMusicApi::registerTypeConverters()
 	pyGeneratorToSongRangeConverter::registerConverter();
 	pyToCppConverter<Song, boost::python::dict>::registerConverter();
 	pySequenceToCppContainerConverter<std::vector<std::string>>::registerConverter();
+	pyToCppConverter<std::string, boost::python::str>::registerConverter();
+	pyToCppConverter<AlbumArt, boost::python::dict>::registerConverter();
+	pySequenceToCppContainerConverter<std::vector<AlbumArt>>::registerConverter();
+	boost::python::to_python_converter<nullptr_t, nullptrToNoneConverter>();
+	pySequenceToCppContainerConverter<std::vector<RegisteredDevice>>::registerConverter();
+	pyToCppConverter<RegisteredDevice, boost::python::dict>::registerConverter();
 }
 
 } // namespace GMusicApi

@@ -1,6 +1,4 @@
 #pragma once
-#include <boost/python.hpp>
-#include <string>
 #include "GMusicApi.h"
 
 namespace GMusicApi

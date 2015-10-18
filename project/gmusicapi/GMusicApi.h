@@ -1,8 +1,13 @@
 #pragma once
+
+#include "utility.h"
+MSC_DISABLE_WARNINGS
 #include <boost/python/detail/wrap_python.hpp>
 #include <boost/python.hpp>
+MSC_RESTORE_WARNINGS
 #include <string>
 #include <sstream>
+#include <map>
 
 namespace GMusicApi
 {

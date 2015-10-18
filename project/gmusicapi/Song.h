@@ -1,154 +1,84 @@
 #pragma once
 
+#include "utility.h"
+MSC_DISABLE_WARNINGS
+#include <boost/python.hpp>
+MSC_RESTORE_WARNINGS
+#include "AlbumArt.h"
+#include "GeneratedRange.h"
 #include <string>
 #include <vector>
-#include <boost/python/detail/wrap_python.hpp>
-#include <boost/python.hpp>
-#include <boost/date_time/gregorian/gregorian_types.hpp>
-#include <boost/range.hpp>
-#include <boost/range/any_range.hpp>
-#include <boost/python/stl_iterator.hpp>
-#include <chrono>
 
 namespace GMusicApi
 {
 
-class Song
+struct Song
 {
-public:
-	using traversal = boost::iterator_traversal<boost::python::stl_input_iterator<Song>>::type;
-	using range = boost::any_range<Song, traversal>;
+	Song(const boost::python::dict& dict)
+	{
+		getFromDict(dict, "comment", m_comment);
+		getFromDict(dict, "rating", m_rating);
+		getFromDict(dict, "albumArtRef", m_albumArtRef);
+		getFromDict(dict, "artistId", m_artistId);
+		getFromDict(dict, "composer", m_composer);
+		getFromDict(dict, "year", m_year);
+		getFromDict(dict, "creationTimestamp", m_creationTimestamp);
+		getFromDict(dict, "id", m_id);
+		getFromDict(dict, "album", m_album);
+		getFromDict(dict, "totalDiscCount", m_totalDiscCount);
+		getFromDict(dict, "title", m_title);
+		getFromDict(dict, "recentTimestamp", m_recentTimestamp);
+		getFromDict(dict, "albumArtist", m_albumArtist);
+		getFromDict(dict, "trackNumber", m_trackNumber);
+		getFromDict(dict, "discNumber", m_discNumber);
+		getFromDict(dict, "deleted", m_deleted);
+		getFromDict(dict, "nid", m_nid);
+		getFromDict(dict, "totalTrackCount", m_totalTrackCount);
+		getFromDict(dict, "estimatedSize", m_estimatedSize);
+		getFromDict(dict, "albumId", m_albumId);
+		getFromDict(dict, "beatsPerMinute", m_beatsPerMinute);
+		getFromDict(dict, "genre", m_genre);
+		getFromDict(dict, "playCount", m_playCount);
+		getFromDict(dict, "artistArtRef", m_artistArtRef);
+		getFromDict(dict, "kind", m_kind);
+		getFromDict(dict, "artist", m_artist);
+		getFromDict(dict, "lastModifiedTimestamp", m_lastModifiedTimestamp);
+		getFromDict(dict, "clientId", m_clientId);
+		getFromDict(dict, "durationMillis", m_durationMillis);
+	}
 
-	Song(const boost::python::dict& dict);
-
-	std::string comment();
-	size_t rating();
-	std::vector<std::string> albumArtRef();
-//	std::vector<std::string> artistId();
-//	std::string composer();
-//	boost::gregorian::greg_year year();
-//	std::chrono::time_point creationTimestamp();
-//	std::string id();
-//	std::string album();
-//	size_t totalDiscCount();
-//	std::string title();
-//	std::chrono::time_point recentTimestamp();
-//	std::string albumArtist();
-//	size_t trackNumber();
-//	size_t discNumber();
-//	bool deleted();
-//	std::string storeId();
-//	std::string nid();
-//	size_t totalTrackCount();
-//	size_t estimatedSize();
-//	std::string albumId();
-//	size_t beatsPerMinute();
-//	std::string genre();
-//	size_t playCount();
-//	std::vector<std::string> artistArtRef();
-//	std::string kind();
-//	std::string artist();
-//	std::chrono::time_point lastModifiedTimestamp();
-//	std::string clientId();
-//	std::chrono::duration duration();
-
-private:
-    template<typename Ret>
-    Ret extractFromDict(const char* key);
-
-    boost::python::dict m_dict;
+	std::string              m_comment;
+	std::string              m_rating;
+	std::vector<AlbumArt>    m_albumArtRef;
+	std::vector<std::string> m_artistId;
+	std::string              m_composer;
+	int                      m_year;
+	std::string              m_creationTimestamp;
+	std::string              m_id;
+	std::string              m_album;
+	int                      m_totalDiscCount;
+	std::string              m_title;
+	std::string              m_recentTimestamp;
+	std::string              m_albumArtist;
+	int                      m_trackNumber;
+	int                      m_discNumber;
+	bool                     m_deleted;
+	std::string              m_nid;
+	int                      m_totalTrackCount;
+	std::string              m_estimatedSize;
+	std::string              m_albumId;
+	int                      m_beatsPerMinute;
+	std::string              m_genre;
+	int                      m_playCount;
+	std::vector<AlbumArt>    m_artistArtRef;
+	std::string              m_kind;
+	std::string              m_artist;
+	std::string              m_lastModifiedTimestamp;
+	std::string              m_clientId;
+	std::string              m_durationMillis;
 };
 
-using SongRange = Song::range;
-
-// used when get_all_songs returns a generator
-class SongGeneratorIterator : 
-	public boost::iterator_facade<SongGeneratorIterator, Song, Song::traversal>
-{
-public:
-	SongGeneratorIterator()
-	{}
-
-	SongGeneratorIterator(boost::python::object& generator)
-		: m_generatorIt(generator)
-	{
-		if (m_generatorIt != m_generatorEnd)
-		{
-			m_currentIt = song_iterator(*m_generatorIt);
-		}
-	}
-
-private:
-	friend class boost::iterator_core_access;
-	
-	void increment() 
-	{
-		if (++m_currentIt == m_currentEnd)
-		{
-			if (++m_generatorIt != m_generatorEnd)
-			{
-				m_currentIt = song_iterator(*m_generatorIt);
-			}
-		}
-	}
-
-	bool equal(SongGeneratorIterator const& other) const
-	{
-		return m_generatorIt == other.m_generatorIt
-			&& m_currentIt == other.m_currentIt;
-	}
-
-	Song& dereference() const 
-	{ 
-		return *m_currentIt; 
-	}
-
-	using generator_iterator = boost::python::stl_input_iterator<boost::python::list>;
-	using song_iterator = boost::python::stl_input_iterator<Song>;
-	generator_iterator	m_generatorIt;
-	generator_iterator	m_generatorEnd;
-	song_iterator m_currentIt;
-	song_iterator m_currentEnd;
-};
-
-struct pyGeneratorToSongRangeConverter
-{
-	static void registerConverter()
-	{
-		boost::python::converter::registry::push_back(
-			&convertible,
-			&construct,
-			boost::python::type_id<SongRange>());
-	}
-
-	static void* convertible(PyObject* pObj)
-	{
-		if (!PyGen_Check(pObj))
-			return nullptr;
-
-		return pObj;
-	}
-
-	// Convert obj_ptr into a QString
-	static void construct(PyObject* pObj,
-						  boost::python::converter::rvalue_from_python_stage1_data* data)
-	{
-		using namespace boost::python;
-
-		// Grab pointer to memory into which to construct the new QString
-		void* storage = (
-			(converter::rvalue_from_python_storage<SongRange>*)
-			data)->storage.bytes;
-
-		// Use borrowed to construct the object so that a reference
-		// count will be properly handled.
-		handle<> hndl(borrowed(pObj));
-		new (storage) SongRange(SongGeneratorIterator(object(hndl)),
-								SongGeneratorIterator());
-
-		// Stash the memory chunk pointer for later use by boost.python
-		data->convertible = storage;
-	}
-};
+using SongRange = GeneratedRange<Song>;
+using pyGeneratorToSongRangeConverter = pyGeneratorToGeneratedRangeConverter<Song>;
 
 } // namespace GMusicApi
