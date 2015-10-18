@@ -43,13 +43,13 @@ setup(
         'decorator >= 3.3.1',                     # > 3.0 likely work, but not on pypi
         'mutagen >= 1.18',                        # EasyID3 module renaming
         'protobuf >= 2.4.1',                      # 2.3.0 uses ez_setup?
-        'requests >= 1.1.0, != 1.2.0, != 2.2.1',  # session.close
+        'requests >= 1.1.0, != 1.2.0, != 2.2.1, < 2.8.0',  # session.close, memory view TypeError
         'python-dateutil >= 1.3, != 2.0',         # 2.0 is python3-only
         'proboscis >= 1.2.5.1',                   # runs_after
         'oauth2client >= 1.1',                    # TokenRevokeError
         'mock >= 0.7.0',                          # MagicMock
         'appdirs >= 1.1.0',                       # user_log_dir
-        'gpsoauth == 0.0.4',                      # mac -> android_id, validation
+        'gpsoauth == 0.0.5',                      # mac -> android_id, validation, pycrypto version
         'MechanicalSoup',
         'pyopenssl',
         'ndg-httpsclient',
