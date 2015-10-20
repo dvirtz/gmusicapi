@@ -107,7 +107,7 @@ struct pyGeneratorToGeneratedRangeConverter
 			(converter::rvalue_from_python_storage<GeneratedRange<T>>*)
 			data)->storage.bytes;
 
-		handle<> hndl(pObj);
+		handle<> hndl(borrowed(pObj));
 		new (storage) GeneratedRange<T>(GeneratorIterator<T>(object(hndl)),
 										GeneratorIterator<T>());
 

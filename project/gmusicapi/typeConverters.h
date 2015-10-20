@@ -39,7 +39,7 @@ inline void pyConvert(PyObject* pObj, void* storage)
 {
 	using namespace boost::python;
 
-	handle<> hndl(pObj);
+	handle<> hndl(borrowed(pObj));
 	new (storage) CType(extract<PyType>(object(hndl)));
 }
 
@@ -123,7 +123,7 @@ struct pySequenceToCppContainerConverter
 			(converter::rvalue_from_python_storage<Container>*)
 			data)->storage.bytes;
 
-		handle<> hndl(pObj);
+		handle<> hndl(borrowed(pObj));
 		new (storage) Container(boost::python::stl_input_iterator<value_type>(object(hndl)),
 								boost::python::stl_input_iterator<value_type>());
 
